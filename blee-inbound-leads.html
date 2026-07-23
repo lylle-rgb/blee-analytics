@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blee Analytics — Inbound Leads</title>
+<style>
+@font-face{font-family:'Faire Octave Display';src:url('assets/69cfbb7b953a6b26b2594ef5_FAIRE-OctaveDisplay-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Inter';src:url('assets/69ce18001884e0818979528d_Inter-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Inter';src:url('assets/69ce180000d80687bb676ed2_Inter-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Inter';src:url('assets/69ce1800b30f05442f382bb7_Inter-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Inter';src:url('assets/69ce1800c336401175a31879_Inter-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  --orange:#FE641D; --orange2:#F8821D; --orange-dark:#E04E10;
+  --umber:#4E4840; --taupe:#867E70; --bone:#E2E1D7; --paper:#FEFBFA;
+  --ghost:#EDE9DF; --blue:#0061FF; --green:#1E9E6A; --red:#E5484D;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',Arial,sans-serif; color:var(--umber); background:var(--paper);
+  background-image:radial-gradient(1200px 500px at 85% -10%, rgba(254,100,29,.06), transparent 60%),
+                   radial-gradient(900px 400px at -10% 110%, rgba(134,126,112,.08), transparent 55%);
+  min-height:100vh; padding:28px 20px 40px;
+}
+.wrap{max-width:1160px;margin:0 auto}
+/* ---------- header ---------- */
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .logo-img{height:38px;width:auto;display:block}
+.brand .divider{width:1px;height:30px;background:var(--bone);margin:0 2px}
+.title-block h1{font-family:'Faire Octave Display',Georgia,serif;font-weight:500;font-size:30px;letter-spacing:.2px;margin-top:2px}
+.subtitle{color:var(--taupe);font-size:13px;margin-top:5px;max-width:640px;line-height:1.45}
+.live{text-align:right;min-width:210px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bone);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--orange-dark);box-shadow:0 1px 3px rgba(78,72,64,.06)}
+.badge .dot{width:9px;height:9px;border-radius:50%;background:var(--orange);animation:pulse 1.6s ease-in-out infinite}
+.badge.stale{color:var(--taupe)} .badge.stale .dot{background:var(--taupe);animation:none}
+.badge.flash{animation:flash .9s ease}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.45}}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(254,100,29,.55)}100%{box-shadow:0 0 0 14px rgba(254,100,29,0)}}
+.refresh-meta{margin-top:8px;font-size:12px;color:var(--taupe)}
+.view-switch{margin-top:10px;font-size:12.5px}
+.view-switch a{color:var(--blue);text-decoration:none;font-weight:500}
+.view-switch a:hover{text-decoration:underline}
+.view-switch .here{color:var(--taupe);font-weight:600}
+/* ---------- KPI cards ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--bone);border-radius:14px;padding:16px 18px;box-shadow:0 1px 4px rgba(78,72,64,.05)}
+.kpi .label{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--taupe)}
+.kpi .value{font-family:'Faire Octave Display',Georgia,serif;font-size:38px;line-height:1.15;margin-top:4px;color:var(--umber)}
+.kpi .sub{font-size:12.5px;color:var(--taupe);margin-top:2px}
+.kpi.delta .value.up{color:var(--green)} .kpi.delta .value.down{color:var(--red)} .kpi.delta .value.flat{color:var(--taupe)}
+.delta-pill{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;margin-left:8px;vertical-align:middle}
+.delta-pill.up{background:rgba(30,158,106,.12);color:var(--green)}
+.delta-pill.down{background:rgba(229,72,77,.10);color:var(--red)}
+.delta-pill.flat{background:var(--ghost);color:var(--taupe)}
+/* ---------- controls ---------- */
+.controls{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.tabs{display:flex;gap:6px;background:#fff;border:1px solid var(--bone);border-radius:12px;padding:5px;box-shadow:0 1px 3px rgba(78,72,64,.05)}
+.tabs button{border:0;background:transparent;padding:8px 18px;border-radius:9px;font-family:'Inter';font-size:13.5px;font-weight:500;color:var(--taupe);cursor:pointer;transition:all .15s}
+.tabs button:hover{color:var(--umber)}
+.tabs button.active{background:var(--orange);color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(254,100,29,.35)}
+.custom{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--taupe)}
+.custom input[type=date]{font-family:'Inter';font-size:13px;color:var(--umber);border:1px solid var(--bone);border-radius:9px;padding:7px 10px;background:#fff}
+.custom input[type=date]:focus{outline:2px solid rgba(254,100,29,.4);border-color:var(--orange)}
+.custom button{border:0;background:var(--umber);color:#fff;font-family:'Inter';font-size:13px;font-weight:600;border-radius:9px;padding:8px 16px;cursor:pointer}
+.custom button:hover{background:#3b3630}
+.custom .err{color:var(--red);font-size:12px;font-weight:500}
+/* ---------- chart ---------- */
+.chart-card{padding:20px 20px 12px}
+.chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.chart-title{font-family:'Faire Octave Display',Georgia,serif;font-size:20px;font-weight:500}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--taupe)}
+.legend .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend .cur{background:linear-gradient(180deg,var(--orange2),var(--orange))}
+.legend .prev{background:var(--ghost);border:1px solid var(--bone)}
+#chart{width:100%;height:360px;position:relative}
+#chart svg{display:block;width:100%;height:100%}
+#tooltip{position:absolute;pointer-events:none;background:var(--umber);color:#fff;border-radius:10px;padding:9px 12px;font-size:12px;line-height:1.5;box-shadow:0 6px 18px rgba(78,72,64,.25);opacity:0;transition:opacity .12s;white-space:nowrap;z-index:5}
+#tooltip .tt-date{font-weight:600}
+#tooltip .tt-prev{color:#cfc9bd}
+/* ---------- footer ---------- */
+footer{margin-top:18px;font-size:12px;color:var(--taupe);line-height:1.6;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer .src{max-width:720px}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <img src="assets/blee_logo_horisontal_orange.svg" alt="Blee" class="logo-img">
+      <span class="divider"></span>
+      <div class="title-block">
+        <h1>Inbound Leads</h1>
+      </div>
+    </div>
+    <div class="live">
+      <span class="badge" id="liveBadge"><span class="dot"></span>LIVE</span>
+      <div class="refresh-meta" id="refreshMeta">connecting…</div>
+      <div class="view-switch">View: <a href="blee-website-visitors.html">← Website visitors</a> · <span class="here">Inbound leads</span></div>
+    </div>
+  </header>
+  <div class="subtitle">Inbound leads — people who raised their hand on blee.com (demo requests, webinar registrations, newsletter and contact forms). Daily = rolling last 6 days, Weekly = rolling last 7 days, Month = months of this year, Quarter = quarters of this year, Year = one bar per year, or pick a custom range.</div>
+
+  <section class="kpis">
+    <div class="card kpi"><div class="label">Total in range</div><div class="value" id="kTotal">–</div><div class="sub" id="kTotalSub"></div></div>
+    <div class="card kpi"><div class="label">Daily average</div><div class="value" id="kAvg">–</div><div class="sub" id="kAvgSub"></div></div>
+    <div class="card kpi"><div class="label" id="kBestLabel">Best day</div><div class="value" id="kBest">–</div><div class="sub" id="kBestSub"></div></div>
+    <div class="card kpi delta"><div class="label" id="kDeltaLabel">vs prior period</div><div class="value" id="kDelta">–</div><div class="sub" id="kDeltaSub"></div></div>
+  </section>
+
+  <section class="controls">
+    <div class="tabs" id="tabs">
+      <button data-r="D" class="active">Daily</button>
+      <button data-r="W">Weekly</button>
+      <button data-r="M">Month</button>
+      <button data-r="Q">Quarter</button>
+      <button data-r="Y">Year</button>
+      <button data-r="C">Custom</button>
+    </div>
+    <div class="custom" id="customRow" style="visibility:hidden">
+      <input type="date" id="cStart"><span>→</span><input type="date" id="cEnd">
+      <button id="cApply">Apply</button><span class="err" id="cErr"></span>
+    </div>
+  </section>
+
+  <section class="card chart-card">
+    <div class="chart-head">
+      <div class="chart-title" id="chartTitle">–</div>
+      <div class="legend" id="legend"><span><span class="sw cur"></span>Current period</span><span><span class="sw prev"></span>Previous period</span></div>
+    </div>
+    <div id="chart"><div id="tooltip"></div></div>
+  </section>
+
+  <footer>
+    <div class="src"><strong>Source:</strong> HubSpot contacts with a <code>first_conversion_date</code> (form fills), bucketed by first conversion date. Refreshed from HubSpot every 5 minutes by Hermes; all dates America/New_York. The in-progress bucket (today / this month / this year) renders at lower opacity.</div>
+    <div>Blee internal · generated 2026-07-22 14:10</div>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+'use strict';
+const VIEW = 'leads';
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const state = { range:'D', cStart:null, cEnd:null };
+const _qp = new URLSearchParams(location.search);
+if(_qp.get('r') && 'DWMQYC'.includes(_qp.get('r'))) state.range = _qp.get('r');
+if(_qp.get('s') && _qp.get('e')){ state.range='C'; state.cStart=_qp.get('s'); state.cEnd=_qp.get('e'); }
+let dataTs = (window.BLEE_DASH||{}).generated_ts || 0;
+
+/* ---------- date helpers (America/New_York frame) ---------- */
+function nyNow(){ return new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'})); }
+function iso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function parseIso(s){ const [y,m,dd]=s.split('-').map(Number); return new Date(y,m-1,dd); }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function addMonths(d,n){ const x=new Date(d); x.setMonth(x.getMonth()+n); return x; }
+function daysBetween(a,b){ const out=[]; for(let d=new Date(a); d<=b; d=addDays(d,1)) out.push(iso(d)); return out; }
+function fmtDate(s){ return parseIso(s).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function fmtLong(s){ return parseIso(s).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
+function sumRange(map,a,b){ let s=0; for(const d of daysBetween(a,b)) s+=map[d]||0; return s; }
+function mondayOf(d){ const x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); return x; }
+
+/* ---------- data access ---------- */
+function seriesMap(){ const m={}; ((window.BLEE_DASH||{})[VIEW]||[]).forEach(r=>{ m[r.d]=r.v; }); return m; }
+function firstDataYear(){ const s=(window.BLEE_DASH||{})[VIEW]||[]; return s.length? parseIso(s[0].d).getFullYear() : nyNow().getFullYear(); }
+
+/* Bucket model: {label, ttLabel, count, prevCount|null, partial} */
+function buildView(){
+  const map=seriesMap(), now=nyNow(), todayIso=iso(now);
+  const R=state.range;
+
+  if(R==='D' || R==='W' || R==='C'){
+    /* D = rolling 6-day lookback, W = rolling 7-day, C = picked dates */
+    let start,end;
+    if(R==='C' && state.cStart && state.cEnd){ start=parseIso(state.cStart); end=parseIso(state.cEnd); }
+    else { const win = R==='D'?6:7; end=now; start=addDays(now,-(win-1)); }
+    const days=daysBetween(start,end), n=days.length;
+    const labelFmt = R==='D' ? {weekday:'long'}
+      : (n<=10?{weekday:'short',day:'numeric'}:{month:'short',day:'numeric'});
+    const buckets=days.map((d,i)=>({
+      label: parseIso(d).toLocaleDateString('en-US',labelFmt),
+      ttLabel: fmtLong(d), count: map[d]||0,
+      prevCount: map[iso(addDays(parseIso(d),-n))]||0,
+      partial: d===todayIso }));
+    return { buckets, bestUnit:'day',
+      deltaName: 'vs prior '+n+' days',
+      curSpan:[start,end], prevSpan:[addDays(start,-n),addDays(start,-1)],
+      title: fmtDate(days[0])+' – '+parseIso(days[n-1]).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      daysInRange:n, ghosts:true };
+  }
+
+  if(R==='M'){
+    const y=now.getFullYear(), cm=now.getMonth();
+    const buckets=[];
+    for(let m=0;m<=cm;m++){
+      const first=new Date(y,m,1), last=(m===cm)?now:new Date(y,m+1,0);
+      const cnt=sumRange(map,first,last);
+      const prevFirst=new Date(y-1,m,1), prevLast=new Date(y-1,m+1,0);
+      buckets.push({ label:MONTHS[m], ttLabel:MONTHS[m]+' '+y, count:cnt,
+        prevCount: sumRange(map,prevFirst,prevLast), partial: m===cm });
+    }
+    const mtdS=new Date(y,cm,1), mtdE=now;
+    const pS=new Date(y,cm-1,1), pE=addMonths(now,-1);
+    return { buckets, bestUnit:'month', deltaName:'Month over month',
+      curSpan:[mtdS,mtdE], prevSpan:[pS,pE],
+      title: MONTHS[0]+' – '+MONTHS[cm]+' '+y, daysInRange: daysBetween(new Date(y,0,1),now).length, ghosts:true };
+  }
+
+  if(R==='Q'){
+    /* quarters of the current year, one bar per quarter; current quarter partial */
+    const y=now.getFullYear(), cq=Math.floor(now.getMonth()/3);
+    const buckets=[];
+    for(let q=0;q<=cq;q++){
+      const first=new Date(y,q*3,1), last=(q===cq)?now:new Date(y,q*3+3,0);
+      buckets.push({ label:'Q'+(q+1), ttLabel:'Q'+(q+1)+' '+y,
+        count:sumRange(map,first,last),
+        prevCount:sumRange(map,new Date(y-1,q*3,1),new Date(y-1,q*3+3,0)),
+        partial:q===cq });
+    }
+    /* QoQ delta: current quarter-to-date vs same days of previous quarter */
+    const qtdS=new Date(y,cq*3,1), pS=new Date(y,cq*3-3,1), pE=addMonths(now,-3);
+    return { buckets, bestUnit:'quarter', deltaName:'Quarter over quarter',
+      curSpan:[qtdS,now], prevSpan:[pS,pE],
+      title:'Q1 – Q'+(cq+1)+' '+y, daysInRange:daysBetween(new Date(y,0,1),now).length, ghosts:true };
+  }
+
+  if(R==='Y'){
+    const y0=firstDataYear(), cy=now.getFullYear();
+    const buckets=[];
+    for(let y=y0;y<=cy;y++){
+      const last=(y===cy)?now:new Date(y,11,31);
+      buckets.push({ label:String(y), ttLabel:String(y)+(y===cy?' (year to date)':''),
+        count:sumRange(map,new Date(y,0,1),last), prevCount:null, partial:y===cy });
+    }
+    const ytdS=new Date(cy,0,1), pS=new Date(cy-1,0,1);
+    const pE=new Date(cy-1,now.getMonth(),now.getDate());
+    return { buckets, bestUnit:'year', deltaName:'Year over year',
+      curSpan:[ytdS,now], prevSpan:[pS,pE],
+      title: y0+' – '+cy, daysInRange:daysBetween(ytdS,now).length, ghosts:false };
+  }
+}
+
+/* ---------- render ---------- */
+function render(){
+  const v=buildView(), map=seriesMap();
+  const curSum=sumRange(map,v.curSpan[0],v.curSpan[1]);
+  const prevSum=sumRange(map,v.prevSpan[0],v.prevSpan[1]);
+
+  /* KPIs */
+  document.getElementById('kTotal').textContent=curSum.toLocaleString();
+  document.getElementById('kTotalSub').textContent=fmtDate(iso(v.curSpan[0]))+' – '+fmtDate(iso(v.curSpan[1]));
+  document.getElementById('kAvg').textContent=(curSum/v.daysInRange).toFixed(1);
+  document.getElementById('kAvgSub').textContent='per day';
+  const bi=v.buckets.reduce((b,x,i)=>x.count>v.buckets[b].count?i:b,0);
+  document.getElementById('kBestLabel').textContent='Best '+v.bestUnit;
+  document.getElementById('kBest').textContent=v.buckets[bi].count.toLocaleString();
+  document.getElementById('kBestSub').textContent=v.buckets[bi].ttLabel;
+  document.getElementById('kDeltaLabel').textContent=v.deltaName;
+  const dEl=document.getElementById('kDelta'), dSub=document.getElementById('kDeltaSub');
+  dEl.classList.remove('up','down','flat');
+  if(prevSum>0){
+    const pct=(curSum-prevSum)/prevSum*100;
+    const cls=pct>0.05?'up':(pct<-0.05?'down':'flat');
+    const arrow=pct>0.05?'▲':(pct<-0.05?'▼':'▬');
+    if(Math.abs(pct)>1000){ const mult=(curSum/prevSum).toFixed(0);
+      dEl.innerHTML=arrow+' '+mult+'× <span class="delta-pill '+cls+'">'+(pct>0?'+':'−')+mult+'×</span>';
+    } else {
+      dEl.innerHTML=arrow+' '+Math.abs(pct).toFixed(1)+'% <span class="delta-pill '+cls+'">'+(pct>=0?'+':'')+pct.toFixed(1)+'%</span>';
+    }
+    dEl.classList.add(cls);
+  } else if(curSum>0){
+    dEl.innerHTML='▲ new <span class="delta-pill up">+∞</span>'; dEl.classList.add('up');
+  } else {
+    dEl.innerHTML='▬ 0% <span class="delta-pill flat">flat</span>'; dEl.classList.add('flat');
+  }
+  dSub.textContent=fmtDate(iso(v.curSpan[0]))+'–'+fmtDate(iso(v.curSpan[1]))+': '+curSum.toLocaleString()+' vs '+fmtDate(iso(v.prevSpan[0]))+'–'+fmtDate(iso(v.prevSpan[1]))+': '+prevSum.toLocaleString();
+  document.getElementById('chartTitle').textContent=v.title;
+  document.getElementById('legend').style.visibility=v.ghosts?'visible':'hidden';
+  drawChart(v);
+}
+
+function niceCeil(x){ if(x<=5)return 5; const p=Math.pow(10,Math.floor(Math.log10(x))); const f=x/p; const nf=f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10; return nf*p; }
+
+function drawChart(v){
+  const host=document.getElementById('chart'), tip=document.getElementById('tooltip');
+  const W=host.clientWidth||900, H=host.clientHeight||360;
+  const m={l:46,r:10,t:10,b:30}, pw=W-m.l-m.r, ph=H-m.t-m.b;
+  const n=v.buckets.length, band=pw/n, bw=Math.max(2,Math.min(band*0.72,110));
+  const all=v.buckets.flatMap(b=>[b.count,b.prevCount||0]);
+  const yMax=niceCeil(Math.max(5,...all));
+  const y=x=>m.t+ph-(x/yMax)*ph;
+  const today=nyNow();
+
+  let s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">';
+  /* weekend shading only for day-bucketed views */
+  if((state.range==='D'||state.range==='W'||state.range==='C') && band>=6){
+    const start=v.curSpan[0];
+    for(let i=0;i<n;i++){ const dow=addDays(start,i).getDay(); if(dow===0||dow===6)
+      s+='<rect x="'+(m.l+i*band)+'" y="'+m.t+'" width="'+band+'" height="'+ph+'" fill="rgba(78,72,64,.045)"/>'; }
+  }
+  /* gridlines + y labels */
+  for(let t=0;t<=4;t++){ const gv=yMax*t/4, gy=y(gv);
+    s+='<line x1="'+m.l+'" y1="'+gy+'" x2="'+(W-m.r)+'" y2="'+gy+'" stroke="#E2E1D7" stroke-width="'+(t===0?1.5:1)+'" '+(t===0?'':'stroke-dasharray="3 4" opacity=".7"')+'/>';
+    s+='<text x="'+(m.l-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="11" fill="#867E70">'+Math.round(gv)+'</text>'; }
+  /* ghost bars (previous period, aligned by index) */
+  if(v.ghosts) for(let i=0;i<n;i++){ const pv=v.buckets[i].prevCount; if(pv>0)
+    s+='<rect x="'+(m.l+i*band+(band-bw)/2)+'" y="'+y(pv)+'" width="'+bw+'" height="'+(m.t+ph-y(pv))+'" fill="#EDE9DF" rx="'+Math.min(3,bw/3)+'"/>'; }
+  /* current bars + in-bar counts */
+  const gid='g'+Math.random().toString(36).slice(2,7);
+  s+='<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8821D"/><stop offset="1" stop-color="#FE641D"/></linearGradient></defs>';
+  for(let i=0;i<n;i++){ const b=v.buckets[i];
+    if(b.future) continue;  /* upcoming day: no bar */
+    const hgt=Math.max(b.count>0?3:0, m.t+ph-y(b.count));
+    s+='<rect data-i="'+i+'" x="'+(m.l+i*band+(band-bw)/2)+'" y="'+y(b.count)+'" width="'+bw+'" height="'+hgt+'" fill="url(#'+gid+')" rx="'+Math.min(4,bw/3)+'"'+(b.partial?' opacity=".65"':'')+'/>';
+    /* unit count: inside the bar when it fits, above it otherwise */
+    const cx=m.l+i*band+band/2, lbl=b.count.toLocaleString();
+    if(bw>=24){
+      if(hgt>=20) s+='<text x="'+cx+'" y="'+(y(b.count)+15)+'" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">'+lbl+'</text>';
+      else s+='<text x="'+cx+'" y="'+(y(b.count)-6)+'" text-anchor="middle" font-size="11.5" font-weight="600" fill="#867E70">'+lbl+'</text>';
+    } }
+  /* x labels */
+  const step = n<=16?1 : n<=45?7 : n<=120?14 : Math.round(n/12);
+  for(let i=0;i<n;i+=step)
+    s+='<text x="'+(m.l+i*band+band/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="'+(v.buckets[i].future?'#CFC9BC':'#867E70')+'">'+v.buckets[i].label+'</text>';
+  s+='</svg>';
+  host.querySelector('svg')?.remove();
+  host.insertAdjacentHTML('afterbegin',s);
+
+  const svg=host.querySelector('svg');
+  svg.addEventListener('mousemove',e=>{
+    const r=svg.getBoundingClientRect();
+    const px=(e.clientX-r.left)*(W/r.width);
+    let i=Math.floor((px-m.l)/band); if(i<0||i>=n){ tip.style.opacity=0; return; }
+    const b=v.buckets[i];
+    if(b.future){ tip.innerHTML='<div class="tt-date">'+b.ttLabel+'</div><div class="tt-prev">upcoming</div>'; }
+    else {
+      tip.innerHTML='<div class="tt-date">'+b.ttLabel+(b.partial?' · in progress':'')+'</div>'
+        +'<div><strong>'+b.count.toLocaleString()+'</strong> this period</div>'
+        +(b.prevCount!=null?'<div class="tt-prev">'+b.prevCount.toLocaleString()+' prior period</div>':'');
+    }
+    tip.style.opacity=1;
+    const tw=tip.offsetWidth;
+    let lx=e.clientX-r.left+14; if(lx+tw>r.width-6) lx=e.clientX-r.left-tw-14;
+    tip.style.left=lx+'px'; tip.style.top=Math.max(4,e.clientY-r.top-52)+'px';
+  });
+  svg.addEventListener('mouseleave',()=>tip.style.opacity=0);
+}
+
+/* ---------- live refresh ---------- */
+function tickMeta(){
+  const meta=document.getElementById('refreshMeta'), badge=document.getElementById('liveBadge');
+  if(!dataTs){ meta.textContent='waiting for data…'; return; }
+  const age=Date.now()-dataTs, mins=Math.floor(age/60000);
+  const next=Math.max(0, dataTs+5*60000-Date.now());
+  const ns=Math.floor(next/1000);
+  meta.textContent='updated '+(mins<1?'just now':mins+'m ago')+' · next refresh in '+Math.floor(ns/60)+':'+String(ns%60).padStart(2,'0');
+  badge.classList.toggle('stale', age>11*60000);
+}
+function reloadData(){
+  const sc=document.createElement('script');
+  sc.src='data.js?t='+Date.now();
+  sc.onload=()=>{
+    if((window.BLEE_DASH||{}).generated_ts && window.BLEE_DASH.generated_ts!==dataTs){
+      dataTs=window.BLEE_DASH.generated_ts;
+      document.getElementById('liveBadge').classList.add('flash');
+      setTimeout(()=>document.getElementById('liveBadge').classList.remove('flash'),1000);
+      render();
+    }
+    sc.remove();
+  };
+  sc.onerror=()=>sc.remove();
+  document.head.appendChild(sc);
+}
+
+/* ---------- controls ---------- */
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
+  state.range=b.dataset.r;
+  document.getElementById('customRow').style.visibility = state.range==='C'?'visible':'hidden';
+  if(state.range==='C' && !state.cStart){
+    const now=nyNow();
+    state.cStart=iso(addDays(now,-13)); state.cEnd=iso(now);
+    document.getElementById('cStart').value=state.cStart;
+    document.getElementById('cEnd').value=state.cEnd;
+  }
+  render();
+});
+document.getElementById('cApply').addEventListener('click',()=>{
+  const s=document.getElementById('cStart').value, e=document.getElementById('cEnd').value, err=document.getElementById('cErr');
+  if(!s||!e){ err.textContent='pick both dates'; return; }
+  if(s>e){ err.textContent='start must be before end'; return; }
+  if(daysBetween(parseIso(s),parseIso(e)).length>730){ err.textContent='max 730 days'; return; }
+  err.textContent=''; state.cStart=s; state.cEnd=e; render();
+});
+
+window.addEventListener('resize',()=>render());
+if(!window.BLEE_DASH){ document.getElementById('refreshMeta').textContent='data.js not found — collector has not run yet'; }
+/* init controls from state (supports ?r= / ?s=&e= deep links) */
+document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active', x.dataset.r===state.range));
+document.getElementById('customRow').style.visibility = state.range==='C'?'visible':'hidden';
+if(state.cStart) document.getElementById('cStart').value = state.cStart;
+if(state.cEnd) document.getElementById('cEnd').value = state.cEnd;
+render(); tickMeta();
+setInterval(tickMeta,1000);
+setInterval(reloadData,60000);
+</script>
+</body>
+</html>
